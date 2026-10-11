@@ -4,6 +4,8 @@ A small, calm parking-memory app. Save your spot, add a few clues, and find your
 
 An independent project with its own application identifiers (`com.compilezen.parkd`). No Amanah Vault code, configuration, credentials, or services are used.
 
+![parkd app screens](docs/parkd-preview.png)
+
 ## First version
 
 - One active spot, saved locally on the device.
@@ -33,6 +35,7 @@ For the browser preview, run `npm run web`. Location requires HTTPS or localhost
 npm run typecheck
 npm run lint
 npm test
+npm run test:ui # after installing Playwright Chromium and exporting web
 npm run export:web
 npm run export:mobile
 ```
