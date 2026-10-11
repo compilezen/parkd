@@ -27,7 +27,7 @@ export default function Home() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not get your location. You can save parking details instead.'); }
     finally { if (timer) clearTimeout(timer); saving.current = false; setBusy(false); }
   }
-  if (loading) return <Screen><ActivityIndicator color={colors.teal} accessibilityLabel="Loading your spot" /></Screen>;
+  if (loading) return <Screen><ActivityIndicator color={colors.primary} accessibilityLabel="Loading your spot" /></Screen>;
   if (loadError) return <Screen><Text style={s.title}>Let’s recover your spot.</Text><Notice>{loadError}</Notice><Button onPress={() => void reload()}>Try again</Button></Screen>;
   return <Screen footer={spot ? <><Button icon="arrow-up-right" onPress={() => router.push('/find')}>Find my car</Button><SmallLink onPress={() => router.push('/details')}>Edit parking details</SmallLink></> : <><Button busy={busy} icon="arrow-right" onPress={() => void saveLocation()}>{busy ? 'Saving your spot…' : 'Save my spot'}</Button><SmallLink onPress={() => { if (!busy) router.push('/details'); }}>Save without GPS</SmallLink></>}>
     <Text style={s.eyebrow}>{spot ? 'PARKED & REMEMBERED' : 'A LITTLE LESS TO REMEMBER'}</Text>
@@ -40,7 +40,7 @@ export default function Home() {
       {spot.accuracy !== undefined && spot.accuracy > 50 && <Notice>GPS is approximate here. Add a photo, floor, or zone to help you find the exact space.</Notice>}
       {!spot.photo && !spot.floor && !spot.zone && <SmallLink onPress={() => router.push('/details')}>+ Add a photo, floor, or zone</SmallLink>}
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 7, marginTop: 22 }}><Icon name="clock" size={14} color={colors.muted} /><Text style={s.mutedCenter}>Saved {new Date(spot.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at {new Date(spot.savedAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</Text></View>
-    </> : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 6 }}><View style={[s.iconButton, { backgroundColor: colors.sage }]}><Icon name="camera" size={21} /></View><View style={{ flex: 1 }}><Text style={[s.fieldLabel, { marginBottom: 4 }]}>In a garage?</Text><Text style={s.body}>Add a photo or floor after saving.</Text></View></View>}
+    </> : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 6 }}><View style={[s.iconButton, { backgroundColor: colors.surface }]}><Icon name="camera" size={21} /></View><View style={{ flex: 1 }}><Text style={[s.fieldLabel, { marginBottom: 4 }]}>In a garage?</Text><Text style={s.body}>Add a photo or floor after saving.</Text></View></View>}
     {!!error && <Notice>{error}</Notice>}
   </Screen>;
 }

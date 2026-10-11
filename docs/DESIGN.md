@@ -1,4 +1,4 @@
-# parkd — version 0.1
+# parkd — version 0.1.1
 
 ## Principle
 
@@ -14,10 +14,10 @@ Optional details: floor, zone/space, note, and one photo. Edit them after saving
 
 ## Visual language
 
-- Warm ivory `#FAF8F3` background.
-- Deep teal `#086C68` actions.
-- Dark green `#193334` text.
-- Sage surfaces, rounded 16–28 pt cards, generous whitespace.
+- Soft white `#FAFAFC` background.
+- Cobalt blue `#4162F6` actions.
+- Charcoal `#202331` text.
+- Pale blue surfaces, rounded 16–28 pt cards, generous whitespace.
 - 44 pt minimum interactive controls and 60 pt primary buttons.
 - System typography, large headlines, restrained outline icons.
 - No bottom tab bar: this app has one main task.

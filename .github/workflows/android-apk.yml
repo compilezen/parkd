@@ -1,0 +1,74 @@
+name: Android test APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'app.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/android-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci
+      - run: npm run typecheck && npm run lint && npm test
+      - name: Generate Android project from Expo configuration
+        run: npx expo prebuild --platform android --no-install
+      - name: Build standalone arm64 test APK
+        working-directory: android
+        run: ./gradlew :app:assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon --max-workers=2
+      - name: Verify and name APK
+        run: |
+          mkdir -p artifacts
+          cp android/app/build/outputs/apk/release/app-release.apk artifacts/parkd-0.1.1-arm64.apk
+          APK_SIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)
+          "$APK_SIGNER" verify --verbose artifacts/parkd-0.1.1-arm64.apk
+          unzip -l artifacts/parkd-0.1.1-arm64.apk | grep 'assets/index.android.bundle'
+          cd artifacts
+          sha256sum parkd-0.1.1-arm64.apk > parkd-0.1.1-arm64.apk.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parkd-android-test
+          path: artifacts/*
+          retention-days: 30
+      - name: Add downloadable APK to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > /tmp/parkd-release.md <<'NOTES'
+          ## parkd — blue theme Android test build
+
+          Download **parkd-0.1.1-arm64.apk** below and open it on a 64-bit Android phone.
+          This is a standalone app: no Expo Go or development server is needed.
+
+          - Cobalt blue, soft white, and charcoal theme.
+          - Save GPS parking locations, photos, floor, zone, and notes.
+          - Open walking directions in Maps.
+          - Saved details remain on the device.
+
+          This test APK uses Expo's standard Android test signing key. It is for testing, not a Play Store production release.
+          NOTES
+          gh release create "v0.1.1-test.${GITHUB_RUN_NUMBER}" artifacts/* --title "parkd 0.1.1 — Android test build" --notes-file /tmp/parkd-release.md --prerelease --target "$GITHUB_SHA"

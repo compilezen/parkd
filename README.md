@@ -40,7 +40,11 @@ npm run export:web
 npm run export:mobile
 ```
 
-## Android test build
+## Android test APK
+
+The **Android test APK** GitHub Actions workflow builds a standalone arm64 APK and attaches it to a GitHub prerelease. Download it from the repository’s Releases page. These test builds use Expo’s standard Android test key; production signing is configured separately.
+
+## EAS builds
 
 The `preview` EAS profile produces an installable Android APK. Connect your own Expo account and EAS project first:
 
@@ -50,7 +54,7 @@ npx eas-cli@latest build:configure
 npx eas-cli@latest build --platform android --profile preview
 ```
 
-An iOS device build needs the appropriate Apple signing setup. No store submissions or cloud builds have been performed as part of this source project.
+An iOS device build needs the appropriate Apple signing setup. No store submission is performed by the test-APK workflow.
 
 ## Scope and privacy
 
@@ -61,7 +65,7 @@ Parking details and a compressed photo are stored in AsyncStorage on the device.
 ## Project structure
 
 - `src/app/`: home, editor, find, photo, and about routes.
-- `src/ui.tsx`: shared cream-and-teal visual components.
+- `src/ui.tsx`: shared white-and-cobalt visual components.
 - `src/store.tsx`: loading and persistent storage.
 - `src/parking.ts`: parking data validation and directions URLs.
 - `tests/`: data and navigation unit tests.
