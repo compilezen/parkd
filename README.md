@@ -47,6 +47,10 @@ npm run export:mobile
 
 The **Android test APK** GitHub Actions workflow builds a standalone arm64 APK and attaches it to a GitHub prerelease. Download it from the repository’s Releases page. These test builds use Expo’s standard Android test key; production signing is configured separately.
 
+## iPhone testing
+
+See [the iPhone testing guide](docs/IPHONE-TESTING.md). For a free first test, install Expo Go, sign in to the same free Expo account on your iPhone and computer, and launch `Test-on-iPhone.cmd` from the downloaded project folder on Windows. The development preview needs a network connection and a running development server. A standalone iPhone build needs Apple signing.
+
 ## EAS builds
 
 The `preview` EAS profile produces an installable Android APK. Connect your own Expo account and EAS project first:

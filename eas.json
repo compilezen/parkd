@@ -9,6 +9,12 @@
         "buildType": "apk"
       }
     },
-    "production": {}
+    "production": {},
+    "iphone": {
+      "extends": "preview",
+      "ios": {
+        "simulator": false
+      }
+    }
   }
 }
