@@ -1,4 +1,4 @@
-# Validation — 11 October 2026
+# Validation — 12 October 2026
 
 ## Passed
 
@@ -29,11 +29,18 @@ npm run test:ui
 
 `CHROMIUM_EXECUTABLE_PATH` can select an existing Chromium binary in restricted build environments. The test uses a local server on port 8083 and saves screenshots to `docs/`.
 
-## Still required before release
+## Android test build
 
-- A signed Android APK / iOS device build.
+- GitHub Actions run [38179003939](https://github.com/compilezen/parkd/actions/runs/38179003939) completed successfully, including native release compilation, APK signature verification, bundled JavaScript verification, and release upload.
+- [Download parkd 0.1.1 for Android arm64](https://github.com/compilezen/parkd/releases/download/v0.1.1-test.2/parkd-0.1.1-arm64.apk). The prerelease includes a SHA-256 checksum.
+- Standalone test APK: no Expo Go or development server required. Uses test signing, not production store signing.
+- The approved cobalt blue theme is included.
+
+## Still required before production release
+
+- Production signing and an iOS device build.
 - Physical-device camera, location permissions, indoor GPS accuracy, safe area, and keyboard tests.
 - Actual Apple Maps / Google Maps app handoff on phones. The browser test checks action availability; the unit tests validate the destination URL.
 - Long-lived storage behavior and OS backup review on target devices.
 
-Bundle exports are not signed installable binaries. No APK, IPA, store submission, or release deployment has been produced yet.
+The Android APK is available for device testing. No physical-device validation, IPA, or store submission has been completed.
