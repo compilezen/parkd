@@ -1,5 +1,10 @@
 # Validation — 12 October 2026
 
+## About screen newline fix — 0.2.1
+
+The About heading and app-data footer previously rendered literal backslash-n characters because the escapes were written directly in JSX text. They now use JavaScript string expressions so real line breaks render. The browser smoke test checks the heading and footer text, and verifies that no literal backslash-n is visible. Strict typecheck, lint, web export, and the smoke suite passed. The font comparisons are separate preview artifacts; app typography has not changed.
+
+
 ## Your way back and phone-reported issues — 0.2.0
 
 Validation passed: 17 resilience scenarios, the original browser smoke suite, five unit test groups, strict TypeScript, lint, and web export. Native keyboard and Maps behavior still require device verification.

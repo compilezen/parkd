@@ -74,6 +74,11 @@ const origin = 'http://127.0.0.1:8083';
     console.log('PASS photo selection, compression, persistence, direct editor route preserves GPS');
 
     await page.getByRole('button', { name: 'About parkd' }).click();
+    assert.equal(await page.getByText('Your spot. Your business.', { exact: true }).textContent(), 'Your spot.\nYour business.');
+    assert.ok(!(await page.locator('body').innerText()).includes('\\n'), 'About must show line breaks, not escape characters');
+    await page.getByText(/parkd · version/).scrollIntoViewIfNeeded();
+    assert.match(await page.getByText(/parkd · version/).textContent(), /\nClearing app data/);
+    await page.getByText('Your spot. Your business.', { exact: true }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(root, 'docs/05-about.png') });
     await page.setViewportSize({ width: 320, height: 640 });
     await page.goto(origin + '/details');
