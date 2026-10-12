@@ -53,4 +53,25 @@ class ParkingNotificationsTest {
     assertEquals("denied", show())
     assertEquals(0, shadowOf(manager).allNotifications.size)
   }
+  @Test @Config(sdk = [33]) fun widgetUsesTranslatedSnapshotEvenWhenNotificationsAreDenied() {
+    shadowOf(RuntimeEnvironment.getApplication()).denyPermissions(Manifest.permission.POST_NOTIFICATIONS)
+    val labels = mapOf("summary" to "الطابق B1", "widgetBody" to "اذهب إلى Bershka", "rtl" to "true", "emptyTitle" to "موقفك", "emptyBody" to "افتح parkd")
+    assertEquals("denied", ParkingNotifications.show(context, 1.0, "parkd", "body", "B1", false, false, labels))
+    val root = ParkingWidgets.views(context).apply(context, android.widget.FrameLayout(context))
+    assertEquals("الطابق B1", root.findViewById<android.widget.TextView>(R.id.parkd_widget_title).text.toString())
+    assertEquals(android.view.View.LAYOUT_DIRECTION_RTL, root.layoutDirection)
+    ParkingNotifications.clear(context, labels)
+    val empty = ParkingWidgets.views(context).apply(context, android.widget.FrameLayout(context))
+    assertEquals("موقفك", empty.findViewById<android.widget.TextView>(R.id.parkd_widget_title).text.toString())
+    assertEquals(0, shadowOf(manager).allNotifications.size)
+  }
+  @Test fun hiddenNotificationDoesNotPreventWidgetRefresh() {
+    show()
+    HideParkingUpdateReceiver().onReceive(context, shadowOf(shadowOf(manager).getNotification(PARKING_NOTIFICATION_ID).deleteIntent).savedIntent)
+    assertEquals("hidden", ParkingNotifications.show(context, 1.0, "parkd", "new clue", "B1", false, false, mapOf("summary" to "B2", "widgetBody" to "Lift A")))
+    val root = ParkingWidgets.views(context).apply(context, android.widget.FrameLayout(context))
+    assertEquals("B2", root.findViewById<android.widget.TextView>(R.id.parkd_widget_title).text.toString())
+    assertEquals("Lift A", root.findViewById<android.widget.TextView>(R.id.parkd_widget_body).text.toString())
+    assertEquals(0, shadowOf(manager).allNotifications.size)
+  }
 }

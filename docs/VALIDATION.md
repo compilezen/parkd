@@ -94,3 +94,11 @@ Android and iOS JavaScript/Hermes exports passed. iOS CNG prebuild generated the
 Android native compilation and three Robolectric notification lifecycle/permission tests run in the APK workflow. Physical device tests for notification promotion, OS dismissal, camera, Maps app launch, and airplane-mode cold launch remain necessary. See LIVE-UPDATES.md for the device checklist.
 
 The selected large cobalt pin/white car mark is now used in the launcher icon, adaptive icon, favicon, brand header, and home illustration. Source SVGs are included.
+
+## Languages, wordmark, and Android widget — 0.4.0
+
+12 October 2026: strict TypeScript, Expo lint, 11 Node test groups, the complete browser smoke check, all 18 photo/offline resilience scenarios, and the new five-language screen test passed. Language checks cover home/editor/validation/saved/return/About, retained language after reload, retained return progress, unchanged user notes, 320 px layout, and a failed language write. Bundled message completeness/interpolation and untranslated static JSX/error guardrails are checked.
+
+The updated English, Arabic, Mandarin Chinese, Spanish, and Hindi screen screenshots are in docs/languages/. The p descender and d ascender extend in a repo-native wordmark SVG. Mobile exports passed, and iOS prebuild generated the localized permission resources. These checks do not constitute signed-iPhone compilation or physical-device testing.
+
+The Android APK workflow runs five Robolectric tests, including widget refresh despite denied/hidden notifications and a translated RTL/empty-state snapshot. Physical launcher pinning and OS promotion still require a phone test. See LANGUAGES.md for installation and system-language limits.

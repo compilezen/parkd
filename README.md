@@ -16,7 +16,9 @@ An independent project with its own application identifiers (`com.compilezen.par
 - Large numbered “Your way back” steps, available offline, with saved progress.
 - Android parking card and active-return Live Update request on supported devices.
 - iOS Live Activity plus persistent Home Screen widget in signed builds.
-- Selected cobalt car-in-pin logo.
+- Selected cobalt car-in-pin logo and extended p/d wordmark.
+- Five offline languages with Arabic RTL layout; switch using the globe button.
+- Android Home Screen widget independent of notification permission.
 - Keyboard-aware editor with a Done key and native keyboard toolbar.
 - Restores the saved spot when the app reopens.
 - Direct saved pin in the Maps app, with a web fallback. Choose directions from Maps.
@@ -83,7 +85,7 @@ Parking details and a compressed photo are stored in AsyncStorage on the device.
 
 ## Live update testing
 
-See [the native feature test checklist](docs/LIVE-UPDATES.md). Android chooses whether an ongoing return notification receives promoted Live Update presentation. Expo Go deliberately skips custom native features; regular screens remain testable.
+See [languages and the Home Screen widget](docs/LANGUAGES.md). See [the native feature test checklist](docs/LIVE-UPDATES.md). Android chooses whether an ongoing return notification receives promoted Live Update presentation. Expo Go deliberately skips custom native features; regular screens remain testable.
 
 ## Next milestones
 

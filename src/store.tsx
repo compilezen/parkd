@@ -1,3 +1,4 @@
+import { useLanguage } from './i18n/provider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
@@ -13,6 +14,7 @@ type Store = {
 };
 const Context = createContext<Store | null>(null);
 export function ParkingProvider({ children }: { children: ReactNode }) {
+  const { language } = useLanguage();
   const [spot, setSpot] = useState<ParkingSpot | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -37,6 +39,10 @@ export function ParkingProvider({ children }: { children: ReactNode }) {
   // Initial loading and AppState reconciliation use the latest ref.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (canReconcile.current) void updateCard(latestSpot.current);
+    // A language change refreshes cards/widgets without restoring dismissed cards.
+  }, [language]);
   async function reload() {
     setLoading(true);
     await readSavedSpot();

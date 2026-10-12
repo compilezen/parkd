@@ -34,7 +34,7 @@ This installs the tunnel package without changing parkd's application dependenci
 
 ## Live Activity and Home Screen widget
 
-The 0.3.0 source includes an iOS Live Activity and small/medium Home Screen widget. They show saved clues and your current return step; tapping opens Your way back. Confirming you are back ends the Live Activity and resets the widget. Updates are local, with no push server.
+The 0.4.0 source includes an iOS Live Activity and small/medium Home Screen widget. They show saved clues and your current return step; tapping opens Your way back. Confirming you are back ends the Live Activity and resets the widget. Updates are local, with no push server.
 
 **Expo Go cannot run these native features.** It can test the normal parking screens and logo. To test Live Activities/widgets, install a signed iPhone build using the steps below. After installing it, add parkd from the Home Screen widget gallery. iOS controls activity duration and widget refresh timing; the saved spot stays in the app. A dismissed activity is not restarted just by reopening parkd.
 
@@ -54,6 +54,8 @@ npx eas-cli@latest build --platform ios --profile iphone
 EAS provides a device registration link and then an installation link for the signed build. Only registered devices included in the provisioning profile can install it. TestFlight is another later distribution option; this project does not automatically upload to the App Store or TestFlight.
 
 ## What to check
+
+- Switch languages with the globe beside the three dots. Check Arabic alignment and unchanged entered notes.
 
 - Save a spot with location denied, enter entrance/lift/floor/zone/space, and view Your way back.
 - Take and choose a photo; cancel the picker and deny camera permission.

@@ -19,7 +19,8 @@ internal const val PARKING_CHANNEL = "parkd-parking-v1"
 internal const val PARKING_PREFS = "parkd-live-updates"
 
 internal object ParkingNotifications {
-  fun show(context: Context, spotId: Double, title: String, body: String, compact: String, returning: Boolean, force: Boolean): String {
+  fun show(context: Context, spotId: Double, title: String, body: String, compact: String, returning: Boolean, force: Boolean, labels: Map<String, String> = emptyMap()): String {
+      ParkingWidgets.snapshot(context, labels["summary"] ?: title, labels["widgetBody"] ?: body, labels)
       val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       val prefs = context.getSharedPreferences(PARKING_PREFS, Context.MODE_PRIVATE)
       val id = spotId.toLong()
@@ -28,8 +29,8 @@ internal object ParkingNotifications {
       if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return "denied"
       if (!manager.areNotificationsEnabled()) return "denied"
       if (Build.VERSION.SDK_INT >= 26) {
-        val channel = NotificationChannel(PARKING_CHANNEL, "Parking memory", NotificationManager.IMPORTANCE_LOW)
-        channel.description = "Your saved spot and the steps back to your car"
+        val channel = NotificationChannel(PARKING_CHANNEL, labels["channel"] ?: "Parking memory", NotificationManager.IMPORTANCE_LOW)
+        channel.description = labels["description"] ?: "Your saved spot and the steps back to your car"
         channel.setSound(null, null)
         channel.enableVibration(false)
         channel.setShowBadge(false)
@@ -59,8 +60,8 @@ internal object ParkingNotifications {
         .setVisibility(Notification.VISIBILITY_PUBLIC)
         .setContentIntent(open)
         .setDeleteIntent(hide)
-        .addAction(Notification.Action.Builder(Icon.createWithResource(context, R.drawable.ic_parkd_parking), "Your way back", open).build())
-        .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_menu_close_clear_cancel), "Hide", hide).build())
+        .addAction(Notification.Action.Builder(Icon.createWithResource(context, R.drawable.ic_parkd_parking), labels["return"] ?: "Your way back", open).build())
+        .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_menu_close_clear_cancel), labels["hide"] ?: "Hide", hide).build())
       if (Build.VERSION.SDK_INT >= 26) builder.setColorized(false)
       // API 36.1 and supporting OEMs recognize this documented extra. Older
       // versions retain the standard notification without claiming promotion.
@@ -72,7 +73,8 @@ internal object ParkingNotifications {
       return try { manager.notify(PARKING_NOTIFICATION_ID, builder.build()); "active" }
       catch (_: SecurityException) { "denied" }
   }
-  fun clear(context: Context) {
+  fun clear(context: Context, labels: Map<String, String> = emptyMap()) {
+    ParkingWidgets.snapshot(context, null, null, labels)
     (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(PARKING_NOTIFICATION_ID)
     context.getSharedPreferences(PARKING_PREFS, Context.MODE_PRIVATE).edit().remove("spotId").remove("hiddenSpotId").apply()
   }

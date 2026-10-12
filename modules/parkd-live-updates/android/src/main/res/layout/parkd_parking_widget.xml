@@ -1,0 +1,8 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/parkd_widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="18dp" android:background="@drawable/parkd_widget_background">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+    <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_parkd_parking" android:tint="#4162F6" android:importantForAccessibility="no"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="parkd." android:textColor="#202331" android:textSize="17sp" android:textStyle="bold"/>
+  </LinearLayout>
+  <TextView android:id="@+id/parkd_widget_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/parkd_widget_empty_title" android:textColor="#202331" android:textSize="19sp" android:textStyle="bold" android:maxLines="2" android:ellipsize="end"/>
+  <TextView android:id="@+id/parkd_widget_body" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/parkd_widget_empty_body" android:textColor="#737582" android:textSize="13sp" android:maxLines="3" android:ellipsize="end"/>
+</LinearLayout>

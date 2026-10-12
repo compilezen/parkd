@@ -1,3 +1,4 @@
+import { t } from './i18n/engine.ts';
 import { describeSpot, returnSteps, type ParkingSpot } from './parking.ts';
 
 export type LiveUpdateStatus = 'off' | 'active' | 'denied' | 'hidden' | 'unavailable' | 'error' | 'superseded';
@@ -16,10 +17,10 @@ export function parkingUpdate(spot: ParkingSpot): ParkingUpdate {
   const summary = describeSpot(spot);
   return {
     spotId: spot.savedAt,
-    title: returning ? 'parkd · Your way back' : 'parkd · Parking saved',
+    title: returning ? t('parkd · Your way back') : t('parkd · Parking saved'),
     body: returning
-      ? `Step ${step + 1} of ${steps.length}: ${steps[step].title}\n${summary}`
-      : `${summary}\n${spot.entrance?.trim() ? `Return via ${spot.entrance.trim()}` : 'Tap to find your car.'}`,
+      ? `${t('Step {number} of {total}: {step}', { number: step + 1, total: steps.length, step: steps[step].title })}\n${summary}`
+      : `${summary}\n${spot.entrance?.trim() ? t('Return via {landmark}', { landmark: spot.entrance.trim() }) : t('Tap to find your car.')}`,
     compact: Array.from(spot.floor.trim() || spot.zone.trim() || 'parkd').slice(0, 7).join(''),
     returning, step, stepCount: steps.length,
   };

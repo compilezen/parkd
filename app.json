@@ -3,13 +3,23 @@
     "name": "parkd",
     "slug": "parkd",
     "scheme": "parkd",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.compilezen.parkd"
+      "bundleIdentifier": "com.compilezen.parkd",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleLocalizations": [
+          "en",
+          "ar",
+          "zh-Hans",
+          "es",
+          "hi"
+        ]
+      }
     },
     "android": {
       "package": "com.compilezen.parkd",
@@ -20,7 +30,7 @@
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "versionCode": 6,
+      "versionCode": 7,
       "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
@@ -70,6 +80,13 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "locales": {
+      "en": "./languages/en.json",
+      "ar": "./languages/ar.json",
+      "zh": "./languages/zh.json",
+      "es": "./languages/es.json",
+      "hi": "./languages/hi.json"
     }
   }
 }

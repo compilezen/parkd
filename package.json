@@ -1,6 +1,6 @@
 {
   "name": "parkd",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/ui": "~57.0.23",
@@ -45,7 +45,8 @@
     "export:web": "expo export --platform web",
     "export:mobile": "expo export --platform android --platform ios --output-dir dist-mobile",
     "test:ui": "node tests/ui-smoke.cjs",
-    "test:resilience": "node tests/resilience.cjs"
+    "test:resilience": "node tests/resilience.cjs",
+    "test:languages": "node tests/languages.cjs"
   },
   "private": true
 }

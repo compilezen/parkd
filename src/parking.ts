@@ -1,3 +1,4 @@
+import { t } from './i18n/engine.ts';
 export type ParkingSpot = {
   version: 1;
   savedAt: number;
@@ -47,8 +48,8 @@ export function newSpot(coordinates?: { latitude: number; longitude: number; acc
 export function mapsUrl(spot: ParkingSpot, platform: string): string | null {
   if (spot.latitude === undefined || spot.longitude === undefined) return null;
   const point = `${spot.latitude},${spot.longitude}`;
-  if (platform === 'android') return `geo:0,0?q=${point}(Parked%20car)`;
-  if (platform === 'ios') return `https://maps.apple.com/?ll=${point}&q=Parked%20car`;
+  if (platform === 'android') return `geo:0,0?q=${point}(${encodeURIComponent(t('Parked car'))})`;
+  if (platform === 'ios') return `https://maps.apple.com/?ll=${point}&q=${encodeURIComponent(t('Parked car'))}`;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(point)}`;
 }
 
@@ -65,16 +66,16 @@ export async function openParkingPin(spot: ParkingSpot, platform: string, open: 
 
 export function returnSteps(spot: ParkingSpot): { title: string; detail: string }[] {
   const steps = [];
-  if (spot.entrance?.trim()) steps.push({ title: `Go to ${spot.entrance.trim()}`, detail: 'Start at the landmark you saved.' });
+  if (spot.entrance?.trim()) steps.push({ title: t('Go to {landmark}', { landmark: spot.entrance.trim() }), detail: t('Start at the landmark you saved.') });
   if (spot.floor.trim() || spot.lift?.trim()) steps.push({
-    title: spot.floor.trim() ? `Go to floor ${spot.floor.trim()}` : `Find ${spot.lift!.trim()}`,
-    detail: spot.lift?.trim() ? `Use ${spot.lift.trim()}.` : 'Use the lift or stairs you came from.',
+    title: spot.floor.trim() ? t('Go to floor {floor}', { floor: spot.floor.trim() }) : t('Find {lift}', { lift: spot.lift!.trim() }),
+    detail: spot.lift?.trim() ? t('Use {lift}.', { lift: spot.lift.trim() }) : t('Use the lift or stairs you came from.'),
   });
-  const bay = [spot.zone.trim() && `Zone ${spot.zone.trim()}`, spot.space?.trim() && `Space ${spot.space.trim()}`].filter(Boolean).join(' · ');
-  if (bay || spot.photo || spot.note.trim()) steps.push({ title: bay || 'Find your car', detail: spot.note.trim() || (spot.photo ? 'Match the parking photo below.' : 'Look for your saved parking space.') });
+  const bay = [spot.zone.trim() && t('Zone {value}', { value: spot.zone.trim() }), spot.space?.trim() && t('Space {value}', { value: spot.space.trim() })].filter(Boolean).join(' · ');
+  if (bay || spot.photo || spot.note.trim()) steps.push({ title: bay || t('Find your car'), detail: spot.note.trim() || (spot.photo ? t('Match the parking photo below.') : t('Look for your saved parking space.')) });
   return steps;
 }
 
 export function describeSpot(spot: ParkingSpot): string {
-  return [spot.floor && `Floor ${spot.floor}`, spot.zone && `Zone ${spot.zone}`, spot.space && `Space ${spot.space}`].filter(Boolean).join(' · ') || 'Your saved parking spot';
+  return [spot.floor && t('Floor {value}', { value: spot.floor }), spot.zone && t('Zone {value}', { value: spot.zone }), spot.space && t('Space {value}', { value: spot.space })].filter(Boolean).join(' · ') || t('Your saved parking spot');
 }

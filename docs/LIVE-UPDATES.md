@@ -1,6 +1,8 @@
-# parkd 0.3.0 native feature testing
+# parkd 0.4.0 native feature testing
 
 ## Android
+
+See LANGUAGES.md for the new Home Screen widget and language picker.
 
 Install the release APK; save a manual spot with entrance Bershka, lift A, floor B1, zone X, space 142. Allow notifications when requested.
 
@@ -12,7 +14,7 @@ Install the release APK; save a manual spot with entrance Bershka, lift A, floor
 - Restart app, airplane mode, edit clues, save another spot, and complete with notifications disabled. No GPS is needed for manual clues.
 - A supported Android version/OEM and enabled promotion settings are required for prominent Live Updates. Standard notification fallback remains available. This is manually entered landmark guidance, not automatic indoor navigation.
 
-The APK workflow compiles the native module and runs three Robolectric lifecycle/permission tests. These simulate Android framework behavior; they do not establish real-device promotion, lock-screen appearance, camera behavior, or battery-management behavior.
+The APK workflow compiles the native module and runs five Robolectric lifecycle/permission tests. These simulate Android framework behavior; they do not establish real-device promotion, lock-screen appearance, camera behavior, or battery-management behavior.
 
 ## iPhone signed build
 

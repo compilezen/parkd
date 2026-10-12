@@ -1,0 +1,8 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "parkd",
+    "NSLocationWhenInUseUsageDescription": "允许 parkd 保存停车位置。",
+    "NSPhotoLibraryUsageDescription": "选择照片以记住车位。",
+    "NSCameraUsageDescription": "拍照以记住车位。"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "parkd",
+    "NSLocationWhenInUseUsageDescription": "Permite que parkd guarde dónde aparcaste.",
+    "NSPhotoLibraryUsageDescription": "Elige una foto para recordar tu plaza.",
+    "NSCameraUsageDescription": "Toma una foto para recordar tu plaza."
+  }
+}
