@@ -8,18 +8,17 @@ parkd uses the same application code on iOS and Android. Its iOS bundle identifi
 2. Create a [free Expo account](https://expo.dev/signup) and sign in to Expo Go.
 3. On your Windows computer, install [Node.js 24 LTS](https://nodejs.org/en/download).
 4. [Download parkd's source ZIP](https://github.com/compilezen/parkd/archive/refs/heads/main.zip) and extract it completely.
-5. Open the extracted `parkd-main` folder and double-click `Test-on-iPhone.cmd`. It installs dependencies and the required Expo tunnel package, asks you to log in to the same Expo account, and starts the preview.
+5. Open the extracted `parkd-main` folder and double-click `Test-on-iPhone.cmd`. It installs dependencies, asks you to log in to the same Expo account, and starts the preview. Put your iPhone and computer on the same Wi-Fi.
 6. Scan the terminal's QR code with your iPhone Camera and open it in Expo Go. Keep the computer window open while testing.
 
-Expo Go currently requires the physical iPhone and Expo CLI to use the same Expo account. The tunnel requires internet on both devices. This development preview is not a standalone install or a verification of airplane-mode cold launches. Saved clues still use on-device storage, but opening/reloading a development bundle requires the development server.
+Expo Go currently requires the physical iPhone and Expo CLI to use the same Expo account. The default launcher uses your local Wi-Fi; allow Node through the Windows firewall on your private network. This development preview is not a standalone install or a verification of airplane-mode cold launches. Saved clues still use on-device storage, but opening/reloading a development bundle requires the development server.
 
 On macOS or Linux, from the downloaded project folder:
 
 ```sh
 npm ci
-npm install --global "@expo/ngrok@^4.1.0"
 npx expo login
-npx expo start --go --tunnel
+npx expo start --go --lan
 ```
 
 ### If the tunnel package is missing in an older download
@@ -31,9 +30,15 @@ npm install --global "@expo/ngrok@^4.1.0"
 npx expo start --go --tunnel
 ```
 
-This installs the tunnel package without changing parkd's application dependencies. The updated Windows launcher installs it explicitly before starting Expo.
+This installs the tunnel package without changing parkd's application dependencies. The updated Windows launcher uses LAN by default and needs no ngrok. If you need a tunnel, run `Test-on-iPhone.cmd --tunnel`; that optional mode installs ngrok.
 
-## Standalone iPhone app later
+## Live Activity and Home Screen widget
+
+The 0.3.0 source includes an iOS Live Activity and small/medium Home Screen widget. They show saved clues and your current return step; tapping opens Your way back. Confirming you are back ends the Live Activity and resets the widget. Updates are local, with no push server.
+
+**Expo Go cannot run these native features.** It can test the normal parking screens and logo. To test Live Activities/widgets, install a signed iPhone build using the steps below. After installing it, add parkd from the Home Screen widget gallery. iOS controls activity duration and widget refresh timing; the saved spot stays in the app. A dismissed activity is not restarted just by reopening parkd.
+
+## Standalone iPhone build
 
 The `iphone` EAS build profile generates an internal-distribution device build. It needs a connected Expo project, a paid Apple Developer membership, signing credentials, and registration of the test iPhone. No paid account is required for the Expo Go path above.
 

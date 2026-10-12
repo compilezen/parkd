@@ -13,12 +13,15 @@ An independent project with its own application identifiers (`com.compilezen.par
 - A manual option for garages and unavailable GPS.
 - Camera or photo-library image, resized before local storage.
 - Entrance, lift/stairs, floor, zone, parking space, and a short note.
-- Large numbered “Your way back” steps, available offline.
+- Large numbered “Your way back” steps, available offline, with saved progress.
+- Android parking card and active-return Live Update request on supported devices.
+- iOS Live Activity plus persistent Home Screen widget in signed builds.
+- Selected cobalt car-in-pin logo.
 - Keyboard-aware editor with a Done key and native keyboard toolbar.
 - Restores the saved spot when the app reopens.
 - Direct saved pin in the Maps app, with a web fallback. Choose directions from Maps.
 - Confirmation before clearing the spot and photo.
-- No accounts, ads, analytics, background tracking, or server.
+- No app accounts, ads, analytics, background tracking, or server.
 
 ## Run locally
 
@@ -77,6 +80,10 @@ Parking details and a compressed photo are stored in AsyncStorage on the device.
 - `src/parking.ts`: parking data validation, return steps, and map pin URLs.
 - `tests/`: data and navigation unit tests.
 - `docs/`: product scope, validation record, and actual UI screenshots.
+
+## Live update testing
+
+See [the native feature test checklist](docs/LIVE-UPDATES.md). Android chooses whether an ongoing return notification receives promoted Live Update presentation. Expo Go deliberately skips custom native features; regular screens remain testable.
 
 ## Next milestones
 

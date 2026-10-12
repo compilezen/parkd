@@ -13,20 +13,24 @@ call npm ci
 if errorlevel 1 goto :failed
 
 echo.
-echo Installing the required Expo tunnel package...
-call npm install --global "@expo/ngrok@^4.1.0"
-if errorlevel 1 goto :failed
-
-echo.
 echo Sign in to your FREE Expo account below.
 echo Use the SAME account in Expo Go on your iPhone.
 call npx expo login
 if errorlevel 1 goto :failed
 
 echo.
-echo Starting parkd with the tunnel package installed.
+echo Put your iPhone and this computer on the SAME Wi-Fi.
+echo Expo Go tests the app screens. Native Live Activities need an iPhone build.
 echo Keep this window open. Scan the QR code with your iPhone Camera.
+if /I "%~1"=="--tunnel" goto :tunnel
+call npx expo start --go --lan
+goto :result
+
+:tunnel
+call npm install --global "@expo/ngrok@^4.1.0"
+if errorlevel 1 goto :failed
 call npx expo start --go --tunnel
+:result
 if errorlevel 1 goto :failed
 exit /b 0
 

@@ -84,3 +84,13 @@ The resilience suite uses port 8084 and writes screenshots and JSON results to t
 - Long-lived storage behavior and OS backup review on target devices.
 
 The Android APK is available for device testing. No physical-device validation, IPA, or store submission has been completed.
+
+## Parking updates and selected logo — 0.3.0
+
+12 October 2026: strict TypeScript, Expo lint, eight Node test groups, browser smoke checks, and all 18 resilience scenarios passed. The photo cases cover six image shapes/types with three replacements each; regression checks cover offline clues, invalid images, storage errors, GPS timeout/late responses, first-tap Maps URL dispatch, narrow layout, and saved return progress.
+
+Android and iOS JavaScript/Hermes exports passed. iOS CNG prebuild generated the widget extension, matching App Group entitlements, and Live Activity Info.plist settings. Expo Go detection prevents loading custom native APIs in Expo Go. This does not constitute an Xcode compilation or an iPhone device test.
+
+Android native compilation and three Robolectric notification lifecycle/permission tests run in the APK workflow. Physical device tests for notification promotion, OS dismissal, camera, Maps app launch, and airplane-mode cold launch remain necessary. See LIVE-UPDATES.md for the device checklist.
+
+The selected large cobalt pin/white car mark is now used in the launcher icon, adaptive icon, favicon, brand header, and home illustration. Source SVGs are included.

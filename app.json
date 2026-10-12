@@ -3,7 +3,7 @@
     "name": "parkd",
     "slug": "parkd",
     "scheme": "parkd",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,12 +15,12 @@
       "package": "com.compilezen.parkd",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#4162F6"
+        "backgroundColor": "#FAFAFC"
       },
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "versionCode": 5,
+      "versionCode": 6,
       "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
@@ -44,6 +44,27 @@
           "photosPermission": "Choose a photo to remember your parking spot.",
           "cameraPermission": "Take a photo to remember your parking spot.",
           "microphonePermission": false
+        }
+      ],
+      [
+        "expo-widgets",
+        {
+          "bundleIdentifier": "com.compilezen.parkd.widgets",
+          "groupIdentifier": "group.com.compilezen.parkd",
+          "enablePushNotifications": false,
+          "widgets": [
+            {
+              "name": "ParkdParkingWidget",
+              "displayName": "parkd",
+              "description": "Your parking clues at a glance",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemMedium"
+                ]
+              }
+            }
+          ]
         }
       ]
     ],

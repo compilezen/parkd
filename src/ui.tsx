@@ -15,7 +15,7 @@ export function Screen({ children, title, back = false, footer, form = false }: 
     <View style={s.shell}>
       <View style={s.header}>
         {back ? <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={s.iconButton}><Icon name="arrow-left" /></Pressable>
-          : <View style={s.brand}><View style={s.brandMark}><Icon name="map-pin" color={colors.white} size={19} /></View><Text style={s.wordmark}>parkd<Text style={{ color: colors.primary }}>.</Text></Text></View>}
+          : <View style={s.brand}><Image source={require("../assets/brand-mark.png")} style={{ width: 36, height: 36 }} accessibilityLabel="parkd car pin" /><Text style={s.wordmark}>parkd<Text style={{ color: colors.primary }}>.</Text></Text></View>}
         {title ? <Text style={s.headerTitle}>{title}</Text> : <Pressable accessibilityRole="button" accessibilityLabel="About parkd" style={s.iconButton} onPress={() => router.push('/about')}><Icon name="more-horizontal" /></Pressable>}
         {back && <View style={{ width: 44 }} />}
       </View>
@@ -43,7 +43,7 @@ export function Notice({ children }: { children: string }) {
 }
 export function ParkingArt({ saved = false }: { saved?: boolean }) {
   return <View style={s.art} accessibilityLabel={saved ? 'Parking location saved' : 'Parking illustration'}>
-    <View style={s.artCircle}><View style={s.innerCircle}><View style={s.pin}><Icon name={saved ? 'check' : 'map-pin'} size={40} color="white" /></View></View></View>
+    <View style={s.artCircle}><View style={s.innerCircle}><Image source={require("../assets/brand-mark.png")} style={{ width: 132, height: 132 }} /></View></View>
     <View style={s.artLabel}><View style={s.dot} /><Text style={s.artLabelText}>{saved ? 'A little peace of mind.' : 'One tap. One less thing to remember.'}</Text></View>
   </View>;
 }

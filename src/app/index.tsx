@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Linking, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useParking } from '../store';
+import { supportsParkingUpdates } from '../live-updates';
 import { newSpot, describeSpot, returnSteps } from '../parking';
 import { Button, colors, Icon, Notice, ParkingArt, Photo, s, Screen, SmallLink } from '../ui';
 
 export default function Home() {
-  const { spot, loading, loadError, reload, persist } = useParking();
+  const { spot, loading, loadError, reload, persist, liveStatus, showParkingUpdate } = useParking();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const saving = useRef(false);
@@ -27,9 +28,16 @@ export default function Home() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not get your location. You can save parking details instead.'); }
     finally { if (timer) clearTimeout(timer); saving.current = false; setBusy(false); }
   }
+  async function startReturn() {
+    if (!spot || busy) return;
+    setBusy(true); setError('');
+    try { await persist({ ...spot, returning: true, returnStep: spot.returnStep ?? 0 }); router.push('/find'); }
+    catch { setError('Could not start your return. Your saved spot is still here. Try again.'); }
+    finally { setBusy(false); }
+  }
   if (loading) return <Screen><ActivityIndicator color={colors.primary} accessibilityLabel="Loading your spot" /></Screen>;
   if (loadError) return <Screen><Text style={s.title}>Let’s recover your spot.</Text><Notice>{loadError}</Notice><Button onPress={() => void reload()}>Try again</Button></Screen>;
-  return <Screen footer={spot ? <><Button icon="arrow-up-right" onPress={() => router.push('/find')}>Find my car</Button><SmallLink onPress={() => router.push('/details')}>Edit parking details</SmallLink></> : <><Button busy={busy} icon="arrow-right" onPress={() => void saveLocation()}>{busy ? 'Saving your spot…' : 'Save my spot'}</Button><SmallLink onPress={() => { if (!busy) router.push('/details'); }}>Save without GPS</SmallLink></>}>
+  return <Screen footer={spot ? <><Button busy={busy} icon="arrow-up-right" onPress={() => void startReturn()}>Find my car</Button><SmallLink onPress={() => router.push('/details')}>Edit parking details</SmallLink></> : <><Button busy={busy} icon="arrow-right" onPress={() => void saveLocation()}>{busy ? 'Saving your spot…' : 'Save my spot'}</Button><SmallLink onPress={() => { if (!busy) router.push('/details'); }}>Save without GPS</SmallLink></>}>
     <Text style={s.eyebrow}>{spot ? 'PARKED & REMEMBERED' : 'A LITTLE LESS TO REMEMBER'}</Text>
     <Text style={s.title}>{spot ? 'Your car is here.' : 'Park it.\nForget about it.'}</Text>
     <Text style={s.body}>{spot ? 'Enjoy your time. We’ve kept your spot.' : 'Save your spot now. Find it easily later.'}</Text>
@@ -41,6 +49,12 @@ export default function Home() {
       {!spot.photo && !spot.floor && !spot.zone && <SmallLink onPress={() => router.push('/details')}>+ Add a photo, floor, or zone</SmallLink>}
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 7, marginTop: 22 }}><Icon name="clock" size={14} color={colors.muted} /><Text style={s.mutedCenter}>Saved {new Date(spot.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at {new Date(spot.savedAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</Text></View>
     </> : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 6 }}><View style={[s.iconButton, { backgroundColor: colors.surface }]}><Icon name="camera" size={21} /></View><View style={{ flex: 1 }}><Text style={[s.fieldLabel, { marginBottom: 4 }]}>In a garage?</Text><Text style={s.body}>Add a photo or floor after saving.</Text></View></View>}
+    {spot && supportsParkingUpdates() && <>
+      {liveStatus === 'active' && <Text style={s.mutedCenter}>Parking update is on your phone.</Text>}
+      {(liveStatus === 'off' || liveStatus === 'hidden') && <SmallLink onPress={() => void showParkingUpdate()}>Show parking update</SmallLink>}
+      {liveStatus === 'denied' && <><Notice>Parking updates are disabled. Your spot is still saved here.</Notice><SmallLink onPress={() => void Linking.openSettings()}>Parking update settings</SmallLink></>}
+      {liveStatus === 'error' && <><Notice>Your spot is saved, but the parking update could not refresh.</Notice><SmallLink onPress={() => void showParkingUpdate()}>Retry parking update</SmallLink></>}
+    </>}
     {!!error && <Notice>{error}</Notice>}
   </Screen>;
 }

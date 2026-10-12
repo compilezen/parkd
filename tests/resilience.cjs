@@ -251,6 +251,28 @@ const output = path.join(root, 'test-results');
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= 320));
       assert.equal((await saved(page)).space, '142');
     });
+    await scenario('return progress survives reload and completion clears the spot', async page => {
+      await button(page, 'Save without GPS').click();
+      await page.getByLabel('Entrance or landmark').fill('Bershka');
+      await page.getByLabel('Floor', { exact: true }).fill('B1');
+      await page.getByLabel('Zone or space').fill('X');
+      await page.getByLabel('Parking space', { exact: true }).fill('142');
+      await button(page, 'Save details').click();
+      await button(page, 'Find my car').click();
+      await button(page, 'I’m here · Next step').click();
+      assert.equal((await saved(page)).returnStep, 1);
+      await page.reload();
+      await button(page, 'I’m here · Next step').waitFor();
+      assert.equal((await saved(page)).returnStep, 1);
+      await button(page, 'I’m here · Next step').click();
+      assert.equal((await saved(page)).returnStep, 2);
+      assert.equal((await saved(page)).zone, 'X');
+      assert.equal(await button(page, 'I’m here · Next step').count(), 0);
+      await button(page, 'I’m back at my car').click();
+      await button(page, 'Yes, I’m back').click();
+      await button(page, 'Save my spot').waitFor();
+      assert.equal(await saved(page), null);
+    });
     await scenario('Maps pin URL is dispatched on the first tap on web', async page => {
       await page.evaluate(() => { window.open = url => { window.mapPinURL = url; return null; }; });
       await button(page, 'Save my spot').click();

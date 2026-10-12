@@ -11,6 +11,8 @@ export type ParkingSpot = {
   entrance?: string;
   lift?: string;
   space?: string;
+  returning?: boolean;
+  returnStep?: number;
 };
 
 export const STORAGE_KEY = 'parkd.spot.v1';
@@ -21,6 +23,8 @@ export function parseSpot(raw: string | null): ParkingSpot | null {
   if (!value || value.version !== 1 || !Number.isFinite(value.savedAt) ||
       typeof value.floor !== 'string' || typeof value.zone !== 'string' ||
       typeof value.note !== 'string' ||
+      (value.returning !== undefined && typeof value.returning !== 'boolean') ||
+      (value.returnStep !== undefined && (!Number.isInteger(value.returnStep) || value.returnStep < 0 || value.returnStep > 2)) ||
       ['entrance', 'lift', 'space'].some(key => value[key] !== undefined && typeof value[key] !== 'string') ||
       (value.photo !== undefined && typeof value.photo !== 'string') ||
       (value.accuracy !== undefined && (!Number.isFinite(value.accuracy) || value.accuracy < 0)) ||
