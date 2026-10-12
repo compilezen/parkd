@@ -46,12 +46,12 @@ jobs:
       - name: Verify and name APK
         run: |
           mkdir -p artifacts
-          cp android/app/build/outputs/apk/release/app-release.apk artifacts/parkd-0.1.2-arm64.apk
+          cp android/app/build/outputs/apk/release/app-release.apk artifacts/parkd-0.2.0-arm64.apk
           APK_SIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)
-          "$APK_SIGNER" verify --verbose artifacts/parkd-0.1.2-arm64.apk
-          unzip -l artifacts/parkd-0.1.2-arm64.apk | grep 'assets/index.android.bundle'
+          "$APK_SIGNER" verify --verbose artifacts/parkd-0.2.0-arm64.apk
+          unzip -l artifacts/parkd-0.2.0-arm64.apk | grep 'assets/index.android.bundle'
           cd artifacts
-          sha256sum parkd-0.1.2-arm64.apk > parkd-0.1.2-arm64.apk.sha256
+          sha256sum parkd-0.2.0-arm64.apk > parkd-0.2.0-arm64.apk.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: parkd-android-test
@@ -62,12 +62,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > /tmp/parkd-release.md <<'NOTES'
-          ## parkd — photo reliability Android test build
+          ## parkd — Your way back Android test build
 
-          Download **parkd-0.1.2-arm64.apk** below and open it on a 64-bit Android phone.
+          Download **parkd-0.2.0-arm64.apk** below and open it on a 64-bit Android phone.
           This is a standalone app: no Expo Go or development server is needed.
 
-          - Fix: saving waits for the photo picker to finish or cancel.
+          - Big offline return steps using entrance, lift, floor, zone, and parking space.
+          - Keyboard-aware form, Done key, and keyboard toolbar.
+          - Direct parking pin in Maps with a web fallback.
           - Repeated photo, offline, storage-failure, and GPS-timeout regression tests.
           - Cobalt blue, soft white, and charcoal theme.
           - Save GPS parking locations, photos, floor, zone, and notes.
@@ -76,4 +78,4 @@ jobs:
 
           This test APK uses Expo's standard Android test signing key. It is for testing, not a Play Store production release.
           NOTES
-          gh release create "v0.1.2-test.${GITHUB_RUN_NUMBER}" artifacts/* --title "parkd 0.1.2 — Android test build" --notes-file /tmp/parkd-release.md --prerelease --target "$GITHUB_SHA"
+          gh release create "v0.2.0-test.${GITHUB_RUN_NUMBER}" artifacts/* --title "parkd 0.2.0 — Android test build" --notes-file /tmp/parkd-release.md --prerelease --target "$GITHUB_SHA"

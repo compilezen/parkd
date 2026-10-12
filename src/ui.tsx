@@ -1,6 +1,7 @@
+import { KeyboardAwareScrollView, KeyboardToolbar } from 'react-native-keyboard-controller';
 import Feather from '@expo/vector-icons/Feather';
 import { type ComponentProps, type ReactNode } from 'react';
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
@@ -9,18 +10,23 @@ export type IconName = ComponentProps<typeof Feather>['name'];
 export function Icon({ name, size = 22, color = colors.primary }: { name: IconName; size?: number; color?: string }) {
   return <Feather name={name} size={size} color={color} />;
 }
-export function Screen({ children, title, back = false, footer }: { children: ReactNode; title?: string; back?: boolean; footer?: ReactNode }) {
+export function Screen({ children, title, back = false, footer, form = false }: { children: ReactNode; title?: string; back?: boolean; footer?: ReactNode; form?: boolean }) {
   return <SafeAreaView style={s.safe}>
-    <KeyboardAvoidingView style={s.shell} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <View style={s.shell}>
       <View style={s.header}>
         {back ? <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={s.iconButton}><Icon name="arrow-left" /></Pressable>
           : <View style={s.brand}><View style={s.brandMark}><Icon name="map-pin" color={colors.white} size={19} /></View><Text style={s.wordmark}>parkd<Text style={{ color: colors.primary }}>.</Text></Text></View>}
         {title ? <Text style={s.headerTitle}>{title}</Text> : <Pressable accessibilityRole="button" accessibilityLabel="About parkd" style={s.iconButton} onPress={() => router.push('/about')}><Icon name="more-horizontal" /></Pressable>}
         {back && <View style={{ width: 44 }} />}
       </View>
-      <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>{children}</ScrollView>
-      {footer && <View style={s.footer}>{footer}</View>}
-    </KeyboardAvoidingView>
+      {form && Platform.OS !== 'web' ? <>
+        <KeyboardAwareScrollView bottomOffset={72} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">{children}{footer && <View style={{ marginTop: 20, marginBottom: 24 }}>{footer}</View>}</KeyboardAwareScrollView>
+        <KeyboardToolbar />
+      </> : <>
+        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>{children}</ScrollView>
+        {footer && <View style={s.footer}>{footer}</View>}
+      </>}
+    </View>
   </SafeAreaView>;
 }
 export function Button({ children, onPress, icon, secondary = false, busy = false, disabled = false }: { children: string; onPress: () => void; icon?: IconName; secondary?: boolean; busy?: boolean; disabled?: boolean }) {

@@ -38,7 +38,7 @@ const origin = 'http://127.0.0.1:8083';
     console.log('Saved layout', await page.evaluate(() => ({ scroll: window.scrollY, height: document.documentElement.scrollHeight, viewport: innerHeight })));
     await page.screenshot({ path: path.join(root, 'docs/03-saved.png') });
     await page.getByRole('button', { name: 'Find my car', exact: true }).click();
-    await page.getByText('Floor B2 · Zone C14', { exact: true }).waitFor();
+    await page.getByText('Floor B2 · Zone C14', { exact: true }).last().waitFor();
     assert.equal(await page.getByRole('button', { name: 'Open in Maps', exact: true }).count(), 0);
     await page.screenshot({ path: path.join(root, 'docs/04-find.png') });
     await page.getByRole('button', { name: 'I’m back at my car', exact: true }).click();

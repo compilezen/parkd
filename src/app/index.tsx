@@ -3,7 +3,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useParking } from '../store';
-import { newSpot } from '../parking';
+import { newSpot, describeSpot, returnSteps } from '../parking';
 import { Button, colors, Icon, Notice, ParkingArt, Photo, s, Screen, SmallLink } from '../ui';
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
     <Text style={s.eyebrow}>{spot ? 'PARKED & REMEMBERED' : 'A LITTLE LESS TO REMEMBER'}</Text>
     <Text style={s.title}>{spot ? 'Your car is here.' : 'Park it.\nForget about it.'}</Text>
     <Text style={s.body}>{spot ? 'Enjoy your time. We’ve kept your spot.' : 'Save your spot now. Find it easily later.'}</Text>
-    {spot?.photo ? <Photo uri={spot.photo} onPress={() => router.push('/photo')} /> : <ParkingArt saved={!!spot} />}
+    {spot?.photo ? <Photo uri={spot.photo} onPress={() => router.push('/photo')} /> : spot ? <View style={[s.card, { flex: 0, marginVertical: 24 }]}><Icon name="navigation" /><Text style={s.fieldLabel}>{returnSteps(spot).length ? 'Your way back is saved' : 'GPS pin saved'}</Text><Text style={s.body}>{spot.entrance || describeSpot(spot)}</Text>{!!spot.space && <Text style={s.body}>Space {spot.space}</Text>}</View> : <ParkingArt />}
     {spot ? <>
       {(spot.floor || spot.zone) && <View style={s.row}>{spot.floor && <View style={s.card}><Icon name="layers" /><Text style={s.label}>Floor</Text><Text style={s.value}>{spot.floor}</Text></View>}{spot.zone && <View style={s.card}><Icon name="map-pin" /><Text style={s.label}>Zone / space</Text><Text style={s.value}>{spot.zone}</Text></View>}</View>}
       {!!spot.note && <View style={{ marginTop: 18 }}><Text style={s.body}>{spot.note}</Text></View>}

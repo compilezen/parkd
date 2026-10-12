@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Platform, Text, TextInput, View } from 'react-native';
+import { Image, Keyboard, Platform, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
@@ -42,26 +42,30 @@ function DetailsEditor() {
   }
   async function save() {
     if (busy) return;
-    if (draft.latitude === undefined && !draft.floor.trim() && !draft.zone.trim() && !draft.note.trim() && !draft.photo) {
+    if (draft.latitude === undefined && !draft.floor.trim() && !draft.zone.trim() && !draft.note.trim() && !draft.photo && !draft.entrance?.trim() && !draft.lift?.trim() && !draft.space?.trim()) {
       setError('Add a photo, floor, zone, or note so you can find your car later.'); return;
     }
+    Keyboard.dismiss();
     setBusy(true); setError('');
-    try { await persist({ ...draft, floor: draft.floor.trim(), zone: draft.zone.trim(), note: draft.note.trim() }); router.dismissTo('/'); }
+    try { await persist({ ...draft, floor: draft.floor.trim(), zone: draft.zone.trim(), note: draft.note.trim(), entrance: draft.entrance?.trim(), lift: draft.lift?.trim(), space: draft.space?.trim() }); router.dismissTo('/'); }
     catch { setError('Your changes could not be saved. Please try again.'); }
     finally { setBusy(false); }
   }
   if (loading || loadError) return <Screen back title="Parking details"><Notice>{loadError || 'Loading your spot…'}</Notice></Screen>;
-  return <Screen back title="Parking details" footer={<Button busy={busy} icon="check" onPress={() => void save()}>Save details</Button>}>
-    <Text style={s.title}>A few little clues.</Text><Text style={[s.body, { marginBottom: 24 }]}>A photo, a floor, a familiar landmark. Add what helps.</Text>
+  return <Screen form back title="Parking details" footer={<Button busy={busy} icon="check" onPress={() => void save()}>Save details</Button>}>
+    <Text style={s.title}>Remember the way back.</Text><Text style={[s.body, { marginBottom: 24 }]}>Save a landmark, your floor, and your space. We’ll turn them into simple steps.</Text>
+    <Text style={s.fieldLabel}>Entrance / landmark</Text><TextInput accessibilityLabel="Entrance or landmark" placeholder="e.g. Bershka" placeholderTextColor={colors.muted} style={s.input} value={draft.entrance ?? ''} onChangeText={entrance => setDraft(current => ({ ...current, entrance }))} maxLength={80} returnKeyType="done" onSubmitEditing={Keyboard.dismiss} editable={!busy} />
+    <Text style={s.fieldLabel}>Lift / stairs</Text><TextInput accessibilityLabel="Lift or stairs" placeholder="e.g. Blue lift beside Bershka" placeholderTextColor={colors.muted} style={s.input} value={draft.lift ?? ''} onChangeText={lift => setDraft(current => ({ ...current, lift }))} maxLength={100} returnKeyType="done" onSubmitEditing={Keyboard.dismiss} editable={!busy} />
+    <View style={s.row}>
+      <View style={{ flex: 1 }}><Text style={s.fieldLabel}>Floor</Text><TextInput accessibilityLabel="Floor" placeholder="e.g. B2" placeholderTextColor={colors.muted} style={s.input} value={draft.floor} onChangeText={floor => { setError(''); setDraft(current => ({ ...current, floor })); }} maxLength={20} autoCapitalize="characters" editable={!busy} /></View>
+      <View style={{ flex: 1 }}><Text style={s.fieldLabel}>Zone</Text><TextInput accessibilityLabel="Zone or space" placeholder="e.g. X" placeholderTextColor={colors.muted} style={s.input} value={draft.zone} onChangeText={zone => { setError(''); setDraft(current => ({ ...current, zone })); }} maxLength={30} autoCapitalize="characters" editable={!busy} /></View>
+    </View>
+    <Text style={s.fieldLabel}>Parking space</Text><TextInput accessibilityLabel="Parking space" placeholder="e.g. 142" placeholderTextColor={colors.muted} style={s.input} value={draft.space ?? ''} onChangeText={space => setDraft(current => ({ ...current, space }))} maxLength={30} returnKeyType="done" onSubmitEditing={Keyboard.dismiss} editable={!busy} />
+    <Text style={s.fieldLabel}>Note</Text><TextInput accessibilityLabel="Parking note" placeholder="Near the blue lift…" placeholderTextColor={colors.muted} style={[s.input, { minHeight: 104, textAlignVertical: 'top' }]} multiline returnKeyType="done" submitBehavior="blurAndSubmit" blurOnSubmit onSubmitEditing={Keyboard.dismiss} value={draft.note} onChangeText={note => { setError(''); setDraft(current => ({ ...current, note })); }} maxLength={500} editable={!busy} />
     {draft.photo && <Image accessibilityLabel="Selected parking photo" source={{ uri: draft.photo }} style={{ width: '100%', height: 190, borderRadius: 20, marginBottom: 14 }} />}
     <View style={s.row}><View style={{ flex: 1 }}><Button secondary disabled={busy} icon="camera" onPress={() => void choosePhoto(true)}>Take photo</Button></View><View style={{ flex: 1 }}><Button secondary disabled={busy} icon="image" onPress={() => void choosePhoto(false)}>Choose</Button></View></View>
     {draft.photo && <SmallLink onPress={() => { if (!busy) setDraft(current => ({ ...current, photo: undefined })); }}>Remove photo</SmallLink>}
     <View style={[s.divider, { marginTop: 24 }]} />
-    <View style={s.row}>
-      <View style={{ flex: 1 }}><Text style={s.fieldLabel}>Floor</Text><TextInput accessibilityLabel="Floor" placeholder="e.g. B2" placeholderTextColor={colors.muted} style={s.input} value={draft.floor} onChangeText={floor => { setError(''); setDraft(current => ({ ...current, floor })); }} maxLength={20} autoCapitalize="characters" editable={!busy} /></View>
-      <View style={{ flex: 1 }}><Text style={s.fieldLabel}>Zone / space</Text><TextInput accessibilityLabel="Zone or space" placeholder="e.g. C14" placeholderTextColor={colors.muted} style={s.input} value={draft.zone} onChangeText={zone => { setError(''); setDraft(current => ({ ...current, zone })); }} maxLength={30} autoCapitalize="characters" editable={!busy} /></View>
-    </View>
-    <Text style={s.fieldLabel}>Note</Text><TextInput accessibilityLabel="Parking note" placeholder="Near the blue lift…" placeholderTextColor={colors.muted} style={[s.input, { minHeight: 104, textAlignVertical: 'top' }]} multiline value={draft.note} onChangeText={note => { setError(''); setDraft(current => ({ ...current, note })); }} maxLength={500} editable={!busy} />
     {!!error && <Notice>{error}</Notice>}
     <Text style={s.mutedCenter}>Only on this device. No account needed.</Text>
   </Screen>;

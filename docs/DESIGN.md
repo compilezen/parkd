@@ -1,4 +1,4 @@
-# parkd — version 0.1.1
+# parkd — version 0.2.0
 
 ## Principle
 
@@ -6,11 +6,11 @@ One spot, one obvious next action. Saving should never require an account, a pho
 
 ## Flow
 
-Home → Save my spot → Saved spot → Find my car → Open in Maps → I’m back → Confirm clear.
+Home → Save my spot → Saved spot → Find my car → Your way back / optional Maps pin → I’m back → Confirm clear.
 
 Manual fallback: Home → Save without GPS → Add at least one helpful detail → Save details.
 
-Optional details: floor, zone/space, note, and one photo. Edit them after saving. Save details explicitly commits changes; leaving the editor discards unsaved edits.
+Optional details: entrance/landmark, lift/stairs, floor, zone, parking space, note, and one photo. The find screen formats the entered clues into large numbered return steps. Missing fields are omitted; no indoor route is calculated. Edit them after saving. Save details explicitly commits changes; leaving the editor discards unsaved edits.
 
 ## Visual language
 

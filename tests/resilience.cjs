@@ -103,7 +103,7 @@ const output = path.join(root, 'test-results');
           assert.ok(Math.abs(dimensions.width / dimensions.height - spec.width / spec.height) < .01);
           await button(page, 'Find my car').click();
           assert.equal(await button(page, 'Open in Maps').count(), 0);
-          await page.getByText(`Floor B${cycle + 1} · Zone C14`, { exact: true }).waitFor();
+          await page.getByText(`Floor B${cycle + 1} · Zone C14`, { exact: true }).last().waitFor();
           await button(page, 'View parking photo').click();
           await page.getByLabel('Your full parking photo').waitFor();
           if (cycle === 2) await page.screenshot({ path: path.join(output, `photo-${spec.name}.png`) });
@@ -224,6 +224,42 @@ const output = path.join(root, 'test-results');
       navigator.geolocation.getCurrentPosition = success => {
         window.finishGPS = () => success({ timestamp: Date.now(), coords: { latitude: 25.28, longitude: 51.53, accuracy: 10 } });
       };
+    });
+    await scenario('way back steps persist offline and Enter finishes the note', async (page, context) => {
+      await button(page, 'Save without GPS').click();
+      await page.getByLabel('Entrance or landmark').fill('Bershka');
+      await page.getByLabel('Lift or stairs').fill('Blue lift beside Bershka');
+      await page.getByLabel('Floor', { exact: true }).fill('B1');
+      await page.getByLabel('Zone or space').fill('X');
+      await page.getByLabel('Parking space', { exact: true }).fill('142');
+      const note = page.getByLabel('Parking note');
+      await note.fill('Beside the blue pillar');
+      await note.press('Enter');
+      assert.equal(await note.inputValue(), 'Beside the blue pillar');
+      assert.equal(await note.evaluate(el => document.activeElement === el), false);
+      await button(page, 'Save details').click();
+      await button(page, 'Find my car').waitFor();
+      await page.reload();
+      await button(page, 'Find my car').waitFor();
+      await context.setOffline(true);
+      await button(page, 'Find my car').click();
+      await page.getByRole('heading', { name: 'Go to Bershka', exact: true }).waitFor();
+      await page.getByRole('heading', { name: 'Go to floor B1', exact: true }).waitFor();
+      await page.getByRole('heading', { name: 'Zone X · Space 142', exact: true }).waitFor();
+      await page.screenshot({ path: path.join(root, 'docs/06-your-way-back.png') });
+      await page.setViewportSize({ width: 320, height: 640 });
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= 320));
+      assert.equal((await saved(page)).space, '142');
+    });
+    await scenario('Maps pin URL is dispatched on the first tap on web', async page => {
+      await page.evaluate(() => { window.open = url => { window.mapPinURL = url; return null; }; });
+      await button(page, 'Save my spot').click();
+      await button(page, 'Find my car').click();
+      await button(page, 'Open in Maps').click();
+      assert.match(await page.evaluate(() => window.mapPinURL), /query=25.28%2C51.53/);
+    }, () => {
+      navigator.permissions.query = async () => ({ state: 'granted' });
+      navigator.geolocation.getCurrentPosition = success => success({ timestamp: Date.now(), coords: { latitude: 25.28, longitude: 51.53, accuracy: 10 } });
     });
     await scenario('long clues remain within narrow screen', async page => {
       await page.setViewportSize({ width: 320, height: 640 });

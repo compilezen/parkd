@@ -4,17 +4,19 @@ A small, calm parking-memory app. Save your spot, add a few clues, and find your
 
 An independent project with its own application identifiers (`com.compilezen.parkd`). No Amanah Vault code, configuration, credentials, or services are used.
 
-![parkd app screens](docs/parkd-preview.png)
+![Your way back](docs/06-your-way-back.png)
 
-## First version
+## Features
 
 - One active spot, saved locally on the device.
 - GPS save with permission handling and a 12-second position timeout.
 - A manual option for garages and unavailable GPS.
 - Camera or photo-library image, resized before local storage.
-- Floor, zone/space, and a short note.
+- Entrance, lift/stairs, floor, zone, parking space, and a short note.
+- Large numbered “Your way back” steps, available offline.
+- Keyboard-aware editor with a Done key and native keyboard toolbar.
 - Restores the saved spot when the app reopens.
-- Walking directions through Apple Maps on iOS or Google Maps on Android/web.
+- Direct saved pin in the Maps app, with a web fallback. Choose directions from Maps.
 - Confirmation before clearing the spot and photo.
 - No accounts, ads, analytics, background tracking, or server.
 
@@ -35,6 +37,7 @@ For the browser preview, run `npm run web`. Location requires HTTPS or localhost
 npm run typecheck
 npm run lint
 npm test
+npm run test:resilience # after installing Playwright Chromium and exporting web
 npm run test:ui # after installing Playwright Chromium and exporting web
 npm run export:web
 npm run export:mobile
@@ -67,7 +70,7 @@ Parking details and a compressed photo are stored in AsyncStorage on the device.
 - `src/app/`: home, editor, find, photo, and about routes.
 - `src/ui.tsx`: shared white-and-cobalt visual components.
 - `src/store.tsx`: loading and persistent storage.
-- `src/parking.ts`: parking data validation and directions URLs.
+- `src/parking.ts`: parking data validation, return steps, and map pin URLs.
 - `tests/`: data and navigation unit tests.
 - `docs/`: product scope, validation record, and actual UI screenshots.
 

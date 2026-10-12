@@ -1,5 +1,19 @@
 # Validation — 12 October 2026
 
+## Your way back and phone-reported issues — 0.2.0
+
+Validation passed: 17 resilience scenarios, the original browser smoke suite, five unit test groups, strict TypeScript, lint, and web export. Native keyboard and Maps behavior still require device verification.
+
+- Added optional entrance, lift/stairs, and parking-space fields without changing the storage key. Existing saved spots remain readable.
+- Added large numbered return steps built from the actual saved clues. They remain local and do not depend on GPS or a routing service.
+- Replaced the editor's basic scroll container on native devices with Expo-compatible Keyboard Controller's keyboard-aware scroll view and toolbar. Notes use Done/blur-and-submit instead of adding a line on Enter. Android is configured for keyboard resize.
+- Maps now receives a direct saved-pin URL (Android geo intent, iOS Apple Maps pin). If the native open rejects, one Google Maps web-pin fallback is attempted. The button prevents duplicate requests while opening. This avoids requesting a route from the user's current location just to display a pin.
+- Added tests for legacy records, missing clues, ordered return steps, direct pin URLs, fallback behavior, and total launch failure. Browser scenarios cover Enter ending note entry, stored steps after reload and offline, and first-click pin URL dispatch (window.open is intercepted).
+- The original Android first-tap Maps failure could not be reproduced on a physical device here. Native keyboard overlap and Maps cold-start behavior must be confirmed on the user's phone. Browser tests do not establish native keyboard or external app behavior.
+
+Official implementation references: [Expo keyboard handling](https://docs.expo.dev/guides/keyboard-handling/), [React Native TextInput](https://reactnative.dev/docs/textinput#submitbehavior), and [Android Maps pin intents](https://developer.android.com/guide/components/google-maps-intents#search-for-a-location).
+
+
 ## Photo and no-GPS regression pass — 0.1.2
 
 Found and fixed: the details screen previously kept Save enabled while the system photo picker was open. The editor now blocks saving and further photo actions until selection, cancellation, or failure has completed. A regression test reproduced the issue before the fix and passed afterward.
