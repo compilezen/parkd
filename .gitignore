@@ -8,6 +8,7 @@ node_modules/
 dist/
 dist-mobile/
 web-build/
+test-results/
 expo-env.d.ts
 
 # Native

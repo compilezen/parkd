@@ -18,4 +18,7 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run export:web
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ui
+      - run: npm run test:resilience
       - run: npm run export:mobile

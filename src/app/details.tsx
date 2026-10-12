@@ -19,6 +19,8 @@ function DetailsEditor() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   async function choosePhoto(camera: boolean) {
+    if (busy) return;
+    setBusy(true);
     setError('');
     try {
       if (camera && Platform.OS !== 'web') {
@@ -28,7 +30,6 @@ function DetailsEditor() {
       const options: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: .8 };
       const result = camera ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
       if (result.canceled) return;
-      setBusy(true);
       const asset = result.assets[0];
       const context = ImageManipulator.manipulate(asset.uri);
       context.resize(asset.width >= asset.height ? { width: Math.min(asset.width, 1200) } : { height: Math.min(asset.height, 1200) });

@@ -1,6 +1,6 @@
 {
   "name": "parkd",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -41,7 +41,8 @@
     "lint": "expo lint",
     "export:web": "expo export --platform web",
     "export:mobile": "expo export --platform android --platform ios",
-    "test:ui": "node tests/ui-smoke.cjs"
+    "test:ui": "node tests/ui-smoke.cjs",
+    "test:resilience": "node tests/resilience.cjs"
   },
   "private": true
 }

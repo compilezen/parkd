@@ -1,5 +1,23 @@
 # Validation — 12 October 2026
 
+## Photo and no-GPS regression pass — 0.1.2
+
+Found and fixed: the details screen previously kept Save enabled while the system photo picker was open. The editor now blocks saving and further photo actions until selection, cancellation, or failure has completed. A regression test reproduced the issue before the fix and passed afterward.
+
+Added `npm run test:resilience` with 15 browser scenarios:
+
+- Six deterministic synthetic image types: 4032×3024 landscape JPEG, 3024×4032 portrait JPEG, 3000×600 panorama JPEG, 320×240 PNG, 1400×1400 transparent PNG, and 1920×1080 dark JPEG.
+- Three distinct replacements per type: 18 photo save/replacement cycles. Each checks JPEG decoding, maximum dimensions, aspect ratio, changed image bytes, persisted content after reload, no-GPS saving while network access is disabled, and offline navigation to the full photo. Removing a photo retains the text clues.
+- Picker lock and cancellation recovery; malformed image recovery.
+- GPS timeout fallback; a late GPS response cannot replace a manually saved spot.
+- Failed delete and failed edit preserve the saved spot; damaged saved data cannot be silently overwritten.
+- A photo-only manual spot cannot lose its last clue through an empty save.
+- Long floor/zone text and Arabic notes at 320×640 stay within the viewport.
+
+The 15 scenarios passed after the fix (14 together, followed by the corrected long-text test). The long-text fixture originally exceeded the input's 20-character limit; the test was corrected to use that limit. The original smoke suite, strict typecheck, lint, and three unit test groups also passed. Both browser suites now run in GitHub checks on future changes.
+
+These are tests of the web rendering and shared application logic, with simulated GPS/storage failures. The six generated fixtures test image handling, not whether a real garage photograph provides enough clues. A web reload uses the local bundle server; this is not a native airplane-mode cold-launch test. Physical Android camera, HEIC decoding, app force-stop/restart, native accessibility, and real-world wayfinding remain unverified. See [proposed next steps and the device test](NEXT-STEPS.md).
+
 ## Passed
 
 - TypeScript strict type check.
@@ -25,9 +43,12 @@
 npm run export:web
 npx playwright install chromium
 npm run test:ui
+npm run test:resilience
 ```
 
 `CHROMIUM_EXECUTABLE_PATH` can select an existing Chromium binary in restricted build environments. The test uses a local server on port 8083 and saves screenshots to `docs/`.
+
+The resilience suite uses port 8084 and writes screenshots and JSON results to the ignored `test-results/` directory. `SCENARIO='long clues' npm run test:resilience` runs a matching scenario in isolation. Test images are generated locally without downloading personal photos.
 
 ## Android test build
 
